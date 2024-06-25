@@ -1,0 +1,31 @@
+name: "Hotel Dashboard"
+version: 1.0
+slug: hotel_dash
+description: >-
+  "A web dash for your Hotel"
+url: https://github.com/sayam93/hotel
+arch:
+  - armv7
+  - armhf
+  - aarch64
+  - amd64
+  - i386
+startup: services
+boot: auto
+ports:
+  4100/tcp: 4100
+ports_description:
+  4100/tcp: Web interface
+schema:
+  my_password: password
+options:
+  my_password: ""
+full_access: false
+ingress: true
+homeassistant_api: true
+auth_api: true
+hassio_api: true
+init: false
+hassio_role: admin
+webui: "[PROTO:option_name]://[HOST]:[PORT:4100]"
+host_network: true

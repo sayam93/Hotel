@@ -1,0 +1,36 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main  # adjust to your main branch name
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: sayam93
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./dash
+          push: true
+          tags: ghcr.io/sayam93/hotel:latest
+        # env:
+        #   BUILDKIT_INLINE_CACHE: 1
+        # run: |
+        #   docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/sayam93/hotel:latest .
+        #   docker push ghcr.io/sayam93/hotel:latest
+        # 
