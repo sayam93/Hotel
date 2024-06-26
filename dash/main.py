@@ -1,6 +1,6 @@
 import asyncio
 from controllers.app import App
-from helpers.app import get_json_file_content,storage_path,is_auth,do_login,HASS_TOKEN,MY_PASSWORD
+from helpers.app import get_json_file_content,storage_path,is_auth,do_login,HASS_TOKEN,MY_PASSWORD,parse_labels
 from flask import Flask,render_template,request,jsonify
 from flask_socketio import SocketIO, emit
 from controllers.ha import HomeAssistant
@@ -54,11 +54,11 @@ def get_auth():
         local_app=App()
         resp=local_app.api()
         if resp and is_auth(request.json['device_id']):
-            return jsonify({'status':True}),200
+            return jsonify({'status':True,'ALLOWED_LABELS':parse_labels()}),200
         else:
-            return jsonify({'status':False}),400
+            return jsonify({'status':False,'ALLOWED_LABELS':parse_labels()}),400
     else:
-        return jsonify({'status':False}),400
+        return jsonify({'status':False,'ALLOWED_LABELS':parse_labels()}),400
 
 
 

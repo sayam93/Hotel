@@ -136,11 +136,22 @@ class App():
             "template":template
         })
         data=self._parse_response(data)
+        print(json.dumps(data))
+        usable_labels=parse_labels()
         if data is not None:
             new_data={}
             for key, value in data.items():
                 try:
-                    new_data[key]=value[0]
+                    for item in value:
+                        # case whre string might be sent
+                        if "," in item:
+                            sub_items=item.split(",")
+                            for sub_item in sub_items:
+                                if sub_item in usable_labels:
+                                    new_data[key]=sub_item
+                        else:
+                            if item in usable_labels:
+                                new_data[key]=item
                 except:
                     pass
             return new_data

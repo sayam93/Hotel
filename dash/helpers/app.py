@@ -12,11 +12,13 @@ if ENV=="production":
     HASS_API = "http://supervisor/core/api/"
     HASS_URL = "ws://supervisor/core/websocket"
     MY_PASSWORD=os.getenv('MY_PASSWORD')
+    ALLOWED_LABELS=os.getenv('ALLOWED_LABELS')
 else:
     HASS_API = "http://homeassistant.local:8123/api/"
     HASS_URL = 'ws://homeassistant.local:8123/api/websocket'
     HASS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjMzI1ODVmNjE1YTI0NmU1OTU3N2FiMWRjOGYxNGFlOCIsImlhdCI6MTcxOTM0NjQ5MCwiZXhwIjoyMDM0NzA2NDkwfQ.wMB97PEdnctHUE0kNFPHBMHdoJLjCNd57V_MXUg4zPo"
     MY_PASSWORD="pass"
+    ALLOWED_LABELS="basic"
 
 def get_file_content(file_path):
     # print(f"path is: {file_path}")
@@ -149,3 +151,8 @@ def log_error(status):
     log['error']=status
     save_to_file(storage_path("log.json"),json.dumps(log))
     return True
+def parse_labels():
+    items:str=re.sub(r'\s+', '_', ALLOWED_LABELS)
+    items=items.strip().lower().replace("-", "_").replace(".", "_").split(",")
+    items=[item.strip().strip("_") for item in items]
+    return items

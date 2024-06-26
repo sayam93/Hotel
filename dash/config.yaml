@@ -1,5 +1,5 @@
 name: "Hotel Dashboard"
-version: 1.0
+version: 1.0.1
 slug: hotel_dash
 description: >-
   "A web dash for your Hotel"
@@ -18,8 +18,10 @@ ports_description:
   4100/tcp: Web interface
 schema:
   my_password: password
+  labels: str
 options:
   my_password: ""
+  labels: ""
 full_access: false
 ingress: true
 homeassistant_api: true
