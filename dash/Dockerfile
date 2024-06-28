@@ -11,7 +11,7 @@ COPY . /app
 # Ensure line endings and permissions
 RUN chmod +x /app/run.sh
 
-RUN pip install flask requests asyncio flask_socketio websockets 
+RUN pip install flask requests asyncio flask_socketio websockets user-agents 
 EXPOSE 4100
 
 

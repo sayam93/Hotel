@@ -1,15 +1,17 @@
 import asyncio
 from controllers.app import App
-from helpers.app import get_json_file_content,storage_path,is_auth,do_login,HASS_TOKEN,MY_PASSWORD,parse_labels
+from helpers.app import get_json_file_content,storage_path,is_auth,do_login,HASS_TOKEN,MY_PASSWORD
 from flask import Flask,render_template,request,jsonify
 from flask_socketio import SocketIO, emit
 from controllers.ha import HomeAssistant
+from user_agents import parse
 
 from datetime import datetime
 
 ha=HomeAssistant()
 app = Flask(__name__)
 socketio = SocketIO(app)
+
 
 
 
@@ -45,20 +47,24 @@ def api():
 def login():
     if request.json['password']!=MY_PASSWORD:
         return jsonify({'status':False}),401
+    ua=request.headers.get('User-Agent')
+    user_agent = parse(ua)
     do_login(request.json['device_id'])
-    return jsonify({'status':True}),200
+    return jsonify({'status':True,'data':{'os':user_agent.os.family.lower(),'is_touch':user_agent.is_mobile or user_agent.is_tablet}}),200
 
 @app.post('/backend/auth-token')
 def get_auth():
+    ua=request.headers.get('User-Agent')
+    user_agent = parse(ua)
     if HASS_TOKEN is not None:
         local_app=App()
         resp=local_app.api()
         if resp and is_auth(request.json['device_id']):
-            return jsonify({'status':True,'ALLOWED_LABELS':parse_labels()}),200
+            return jsonify({'status':True,'data':{'os':user_agent.os.family.lower(),'is_touch':user_agent.is_mobile or user_agent.is_tablet}}),200
         else:
-            return jsonify({'status':False,'ALLOWED_LABELS':parse_labels()}),400
+            return jsonify({'status':False,'data':{'os':user_agent.os.family.lower(),'is_touch':user_agent.is_mobile or user_agent.is_tablet}}),400
     else:
-        return jsonify({'status':False,'ALLOWED_LABELS':parse_labels()}),400
+        return jsonify({'status':False,'data':{'os':user_agent.os.family.lower()}}),400
 
 
 
