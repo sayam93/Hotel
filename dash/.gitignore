@@ -1,7 +1,1 @@
-node_modules/
-src/
-webpack.mix.js
-tailwind.config.js
-package.json
-package-lock.json
-mix-manifest.json
+node-modules/
